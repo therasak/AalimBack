@@ -11,7 +11,8 @@ connectDB();
 
 // Middlewares
 app.use(cors({
-  origin: 'http://localhost:5173',
+  // origin: 'http://localhost:5173',
+  origin: 'https://cableoperator.vercel.app',
   methods: ['GET', 'POST'],
   credentials: true
 }));
