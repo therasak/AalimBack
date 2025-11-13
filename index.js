@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors');   
+const cors = require('cors');
 const connectDB = require('./config/db');
 const dotEnv = require('dotenv');
 const userRoute = require('./route/userRouters'); // Correctly import the router
@@ -12,8 +12,8 @@ connectDB();
 // Middlewares
 app.use(cors({
   origin: 'http://localhost:5173',
-  methods: ['GET', 'POST'], 
-  credentials: true 
+  methods: ['GET', 'POST'],
+  credentials: true
 }));
 
 app.use(express.json()); // ✅ This must be BEFORE routes
