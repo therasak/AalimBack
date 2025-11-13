@@ -170,8 +170,43 @@ const uploadCustomers = async (req, res) => {
   }
 };
 
-module.exports = {uploadCustomers};
+// module.exports = {uploadCustomers};
+
+
+// -------------------------------------------------------------
+// Add Single Customer
+const addCustomer = async (req, res) => {
+  const {customerName, cardNumber, boxNumber, phoneNumber, street, company, status} = req.body;
+  try {
+    const existingCustomer = await CustomerModel.findOne({$or: [{cardNumber}, {boxNumber}]});
+    if (existingCustomer) {
+      return res.status(400).json({message: 'Customer with the same card number or box number already exists'});
+    }
+
+    const newCustomer = new CustomerModel({
+      customerName,
+      cardNumber,
+      boxNumber,
+      phoneNumber,
+      street,
+      company,
+      status: status || "Active",
+    });
+
+    // console.log(newCustomer);
+
+    const savedCustomer = await newCustomer.save();
+    // console.log(savedCustomer);
+
+    res.status(200).json({message: 'Customer added successfully', newCustomer: savedCustomer});
+  } catch (error) {
+    console.error(error);  // Log full error for debugging
+    res.status(500).json({message: 'Server Error'});
+  }
+};
 
 
 
-module.exports = {login, fetchCustomers, fetchMonths, changeMonth, saveCustomerPayment, uploadCustomers};
+
+
+module.exports = {login, fetchCustomers, fetchMonths, changeMonth, saveCustomerPayment, uploadCustomers, addCustomer};
