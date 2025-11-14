@@ -207,6 +207,118 @@ const addCustomer = async (req, res) => {
 
 
 
+// -------------------------------------------------------------
+// Search Customer
+
+const searchCustomer = async (req, res) => {
+  const {searchValue} = req.query;
+  console.log(searchValue);
+
+  try {
+    const customer = await CustomerModel.findOne({cardNumber: searchValue});
+
+    if (!customer) {
+      return res.status(404).json({message: "Customer not found"});
+    }
+
+    res.status(200).json(customer);
+
+  } catch (error) {
+    res.status(500).json({message: "Server Error"});
+  }
+};
 
 
-module.exports = {login, fetchCustomers, fetchMonths, changeMonth, saveCustomerPayment, uploadCustomers, addCustomer};
+// -------------------------------------------------------------
+// Edit Customer
+
+// const editCustomer = async (req, res) => {
+//   const {customerName, cardNumber, boxNumber, phoneNumber, street, company, status} = req.body;
+//   console.log(req.body)
+//   try {
+//     const checkBoxNumber = await CustomerModel.find({boxNumber: boxNumber})
+//     console.log(checkBoxNumber)
+//     if (checkBoxNumber.length > 0) {
+//       return res.status(400).json({message: 'Box Number already exists'});
+//     }
+//     const updatedCustomer = await CustomerModel.findOneAndUpdate(
+//       {cardNumber: cardNumber},
+//       {
+//         $set: {
+//           customerName,
+//           boxNumber,
+//           phoneNumber,
+//           street,
+//           company,
+//           status: status || "Active",
+//         }
+//       },
+//     );
+//     res.status(200).json({message: 'Customer updated successfully', updatedCustomer});
+//   }
+//   catch (error) {
+//     console.error(error);  // Log full error for debugging
+//     res.status(500).json({message: 'Server Error'});
+//   }
+// };
+
+
+
+
+//--------------------------------------------------
+
+
+const editCustomerBox = async (req, res) => {
+  const {cardNumber, boxNumber} = req.body;
+  try {
+    const exists = await CustomerModel.findOne({boxNumber});
+    if (exists) {
+      return res.status(400).json({message: "Box Number already exists"});
+    }
+    const updated = await CustomerModel.findOneAndUpdate(
+      {cardNumber},
+      {$set: {boxNumber}},
+      {new: true}
+    );
+    if (!updated) {
+      return res.status(404).json({message: "Customer not found"});
+    }
+    res.status(200).json({message: "Box Number updated successfully", updated});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({message: "Server Error"});
+  }
+};
+
+
+const editCustomerDetails = async (req, res) => {
+  const {cardNumber, customerName, phoneNumber, street, company, status} = req.body;
+  try {
+    const updated = await CustomerModel.findOneAndUpdate(
+      {cardNumber},
+      {
+        $set: {
+          customerName,
+          phoneNumber,
+          street,
+          company,
+          status: status || "Active",
+        },
+      },
+      {new: true}
+    );
+    if (!updated) {
+      return res.status(404).json({message: "Customer not found"});
+    }
+    res.status(200).json({message: "Other details updated successfully", updated});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({message: "Server Error"});
+  }
+};
+
+
+module.exports = {
+  login,
+  fetchCustomers, fetchMonths, changeMonth, saveCustomerPayment, uploadCustomers, addCustomer, searchCustomer, editCustomerBox, editCustomerDetails
+};
