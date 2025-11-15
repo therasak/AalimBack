@@ -1,6 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const {login, fetchCustomers, changeMonth, fetchMonths, saveCustomerPayment, uploadCustomers, addCustomer, searchCustomer, editCustomerBox, editCustomerDetails} = require('../controllers/userControler'); // ✅ import login controller
+const {login,
+    fetchCustomers, changeMonth,
+    fetchMonths, saveCustomerPayment,
+    uploadCustomers,
+    addCustomer, searchCustomer,
+    editCustomerBox, editCustomerDetails,
+    monthlyReport, downloadDayReportExcel,
+    deleteData,
+    dashboardData
+} = require('../controllers/userControler'); // ✅ import login controller
 
 
 // ------------------------------------------------
@@ -20,7 +29,20 @@ router.get('/getMonths', fetchMonths);
 router.post('/changeMonth', changeMonth);// Chnage Month
 
 
+// dashboard
 
+router.get('/dashboard',dashboardData)
+
+//Delete Data
+
+router.post('/deleteData', deleteData)
+
+
+
+// For resport 
+
+router.get('/monthlyReport', monthlyReport)
+router.get('/day-excel', downloadDayReportExcel);
 
 router.post("/EditCustomerBox", editCustomerBox);
 router.post("/EditCustomerDetails", editCustomerDetails);

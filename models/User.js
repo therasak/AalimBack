@@ -1,15 +1,20 @@
-const mongoose=require('mongoose')
+const {request} = require('express')
+const mongoose = require('mongoose')
 
-const userSchema=new mongoose.Schema({
+const userSchema = new mongoose.Schema({
 
-    userName:{
-        type:String,
-        required:true
+    userId: {
+        type: String,
+        required: true
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+        type: String,
+        required: true
+    },
+    name: {
+        type: String,
+        request: true
     }
 })
 
-module.exports = mongoose.model('User',userSchema)
+module.exports = mongoose.model('User', userSchema) 
